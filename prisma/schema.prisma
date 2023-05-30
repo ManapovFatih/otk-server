@@ -1,0 +1,180 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  email        String?       @unique
+  image        String?
+  password     Password?
+  session      Session[]
+}
+
+model Password {
+  userId   Int    @unique
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  password String
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  refreshToken String   @unique
+  fingerprint  String   @unique
+  ip           String
+  userAgent    String
+  expiresAt    DateTime
+}
+
+model Product {
+  id                            Int                      @id @default(autoincrement())
+  name                          String
+  price                         Int
+  description                   String?
+  article                       Int?
+  images                        String[]
+  models                        String[]
+  categoryId                    Int
+  category                      Category                 @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  productOnCharacteristics      ProductOnCharacteristics[]
+  productOnSpecification        ProductOnSpecification[]
+  productOnOption               ProductOnOption[]
+  affinities                    ProductAffinities[]      @relation(name: "affinities")
+  affinityFor                   ProductAffinities[]      @relation(name: "affinityFor")
+  anketa                        Anketa[]
+}
+
+model Category {
+  id             Int             @id @default(autoincrement())
+  name           String
+  image          String?
+  specifications Specification[]
+  parameters     Parameter[]
+  product       Product[]
+}
+
+model Specification {
+  id                     Int                      @id @default(autoincrement())
+  name                   String
+  categoryId             Int
+  category               Category                 @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  productOnSpecification ProductOnSpecification[]
+}
+
+model ProductOnSpecification {
+  productId       Int
+  product         Product       @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  specificationId Int
+  specification   Specification @relation(fields: [specificationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([productId, specificationId])
+}
+
+model Parameter {
+  id         Int       @id @default(autoincrement())
+  name       String
+  categoryId Int?
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  options    Option[]
+}
+
+model News {
+  id          Int      @id @default(autoincrement())
+  image       String?
+  title       String
+  description String
+  isShowing   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model Option {
+  id              Int               @id @default(autoincrement())
+  parameterId     Int
+  parameter       Parameter         @relation(fields: [parameterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  name            String
+  productOnOption ProductOnOption[]
+}
+
+model ProductOnOption {
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  optionId  Int
+  option    Option  @relation(fields: [optionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([productId, optionId])
+}
+
+model ProductAffinities {
+  productId       Int
+  product         Product? @relation(name: "affinities", fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  targetProductId Int
+  targetProduct   Product? @relation(name: "affinityFor", fields: [targetProductId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([productId, targetProductId])
+}
+
+model Settings {
+  id          Int    @id @default(autoincrement())
+  phone       String
+  legalStatus String
+  address     String
+}
+
+model Reviews {
+  id          Int    @id @default(autoincrement())
+  count       Int
+  description String
+}
+
+
+model Anketa {
+  id          Int    @id @default(autoincrement())
+  typeId      Int?
+  typeHouse   TypeHouse? @relation(fields: [typeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  areaId      Int?
+  areaHouse   AreaHouse? @relation(fields: [areaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  productId   Int?
+  product     Product? @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  name        String
+  phone       String
+  
+}
+
+model TypeHouse {
+  id          Int    @id @default(autoincrement())
+  name        String
+  image       String?
+  anketa      Anketa[]
+}
+
+model AreaHouse {
+  id          Int    @id @default(autoincrement())
+  area        String
+  anketa      Anketa[]
+}
+
+model Characteristics {
+  id                        Int       @id @default(autoincrement())
+  name                      String
+  value                     String
+  productOnCharacteristics  ProductOnCharacteristics[]
+}
+
+model ProductOnCharacteristics {
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  characteristicsId  Int
+  characteristics    Characteristics  @relation(fields: [characteristicsId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([productId, characteristicsId])
+}

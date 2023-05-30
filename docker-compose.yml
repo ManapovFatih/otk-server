@@ -1,0 +1,29 @@
+version: '3.9'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    environment:
+      PORT: 5000
+      DATABASE_URL: 'postgresql://postgres:root@postgres:5432/otk?schema=public'
+      JWT_ACCESS_SECRET: 'edgfhggnstnskbdogjuse0urhausd9igjsoidyfo978aydrd'
+      JWT_REFRESH_SECRET: 'ssdrtbyerygwergawernuw89eu89asjdoy9fabc7est789awe'
+    depends_on:
+      - postgres
+    volumes:
+      - ./static:/usr/src/app/static
+
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: 'root'
+      POSTGRES_USER: postgres
+      PGDATA: '/var/lib/postgresql/data/pgdata'
+    volumes:
+      - ~/Database/Postgres:/var/lib/postgresql/data
