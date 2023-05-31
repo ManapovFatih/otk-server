@@ -10,7 +10,9 @@ export class AnketaService {
   async create(createAnketaDto: CreateAnketaDto) {
     const { ...createDto } = createAnketaDto;
     return await this.prismaService.anketa.create({
-      data: { ...createDto,},
+      data: {
+        ...createDto,
+      },
     });
   }
   
