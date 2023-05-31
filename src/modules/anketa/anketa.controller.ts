@@ -33,7 +33,7 @@ export class AnketaController {
     return await this.anketaService.findById(+id);
   }
 
-  @ApiOperation({ summary: 'Get all Area House' })
+  @ApiOperation({ summary: 'Get all Anketa' })
   @ApiOkResponse({
     type: [AnketaEntity],
   })
@@ -42,7 +42,7 @@ export class AnketaController {
     return await this.anketaService.findAll();
   }
 
-  @ApiOperation({ summary: 'Create Area House' })
+  @ApiOperation({ summary: 'Create Anketa' })
   @ApiCreatedResponse({
     type: AnketaEntity,
   })
@@ -53,7 +53,7 @@ export class AnketaController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Update Area House' })
+  @ApiOperation({ summary: 'Update Anketa' })
   @ApiOkResponse({
     type: AnketaEntity,
   })
@@ -67,7 +67,7 @@ export class AnketaController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Delete Area House' })
+  @ApiOperation({ summary: 'Delete Anketa' })
   @ApiOkResponse({
     type: AnketaEntity,
   })
