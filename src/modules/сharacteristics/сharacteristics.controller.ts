@@ -33,7 +33,7 @@ export class СharacteristicsController {
     return await this.сharacteristicsService.findById(+id);
   }
 
-  @ApiOperation({ summary: 'Get all Area House' })
+  @ApiOperation({ summary: 'Get all Сharacteristics' })
   @ApiOkResponse({
     type: [CharacteristicsEntity],
   })
@@ -42,7 +42,7 @@ export class СharacteristicsController {
     return await this.сharacteristicsService.findAll();
   }
 
-  @ApiOperation({ summary: 'Create Area House' })
+  @ApiOperation({ summary: 'Create Сharacteristics' })
   @ApiCreatedResponse({
     type: CharacteristicsEntity,
   })
@@ -53,7 +53,7 @@ export class СharacteristicsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Update Area House' })
+  @ApiOperation({ summary: 'Update Сharacteristics' })
   @ApiOkResponse({
     type: CharacteristicsEntity,
   })
@@ -67,7 +67,7 @@ export class СharacteristicsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Delete Area House' })
+  @ApiOperation({ summary: 'Delete Сharacteristics' })
   @ApiOkResponse({
     type: CharacteristicsEntity,
   })
